@@ -137,6 +137,135 @@
             border-radius: 4px;
             font-size: 13px;
         }
+
+        /* Modal styles for mobile-friendly regulation viewing */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border: 1px solid #888;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: #4285f4;
+            color: white;
+            border-radius: 8px 8px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            opacity: 0.7;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3367d6;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .regulation-content {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 10px auto;
+                max-height: 90vh;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+
+            .regulation-content {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -145,7 +274,7 @@
             Global AI Regulations & Frameworks Map
             <span class="update-badge">Updated Feb 2026</span>
         </h1>
-        <p class="subtitle">Click on any highlighted country to download AI regulation or framework information • Data current as of February 2026</p>
+        <p class="subtitle">Click on any highlighted country to view and download AI regulation or framework information • Data current as of February 2026</p>
         
         <div id="map"></div>
         
@@ -165,7 +294,7 @@
         </div>
         
         <div class="stats-box">
-            <strong>📊 Global Coverage:</strong> This map includes 72+ countries with AI policies, including comprehensive laws (blue) and strategic frameworks/guidelines (green). Countries shown include major regulations in EU, USA, China, and frameworks across Middle East, North Africa, and Asia-Pacific.
+            <strong>📊 Global Coverage:</strong> This map includes 70+ countries with AI policies, including comprehensive laws (blue) and strategic frameworks/guidelines (green). Countries shown include major regulations in EU, USA, China, and frameworks across Middle East, North Africa, and Asia-Pacific.
         </div>
         
         <div class="info-box">
@@ -177,7 +306,27 @@
     
     <div class="tooltip"></div>
 
+    <!-- Modal for viewing/downloading regulation -->
+    <div id="regulationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <h2 id="modalTitle"></h2>
+            </div>
+            <div class="modal-body">
+                <div id="modalContent" class="regulation-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-primary" onclick="downloadCurrentRegulation()">Download</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let currentRegulationKey = null;
+        let currentRegulationContent = null;
+
         // Comprehensive AI Regulations & Frameworks Database - February 2026
         const aiRegulations = {
             "European Union": {
@@ -613,14 +762,14 @@
             return null;
         }
 
-        // Function to generate regulation/framework document
-        function downloadRegulation(regulationKey) {
+        // Function to generate regulation/framework content
+        function generateRegulationContent(regulationKey) {
             const reg = aiRegulations[regulationKey];
-            if (!reg) return;
+            if (!reg) return null;
             
             const docType = reg.type === 'law' ? 'REGULATION' : 'FRAMEWORK/GUIDELINE';
             
-            let content = `AI ${docType} INFORMATION
+            return `AI ${docType} INFORMATION
 ${'='.repeat(80)}
 
 Country/Region: ${regulationKey}
@@ -654,19 +803,63 @@ ${reg.type === 'framework' ? `
 FRAMEWORK NOTE: This country has adopted a strategic framework, guidelines, or 
 voluntary principles approach rather than binding legislation. Organizations should 
 monitor for transition to mandatory requirements and follow sector-specific rules.
-` : ''}
-`;
+` : ''}`;
+        }
 
-            const blob = new Blob([content], { type: 'text/plain' });
+        // Function to show modal with regulation
+        function showRegulationModal(regulationKey) {
+            const reg = aiRegulations[regulationKey];
+            if (!reg) return;
+            
+            currentRegulationKey = regulationKey;
+            currentRegulationContent = generateRegulationContent(regulationKey);
+            
+            const modal = document.getElementById('regulationModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            
+            const typeLabel = reg.type === 'law' ? '📋 Law/Regulation' : '📘 Framework/Guidelines';
+            modalTitle.textContent = `${regulationKey} - ${typeLabel}`;
+            modalContent.textContent = currentRegulationContent;
+            
+            modal.style.display = 'block';
+        }
+
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('regulationModal').style.display = 'none';
+        }
+
+        // Function to download from modal
+        function downloadCurrentRegulation() {
+            if (!currentRegulationKey || !currentRegulationContent) return;
+            
+            const reg = aiRegulations[currentRegulationKey];
+            const blob = new Blob([currentRegulationContent], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             const typeLabel = reg.type === 'law' ? 'Regulation' : 'Framework';
-            a.download = `AI_${typeLabel}_${regulationKey.replace(/\s+/g, '_')}_Feb2026.txt`;
+            a.download = `AI_${typeLabel}_${currentRegulationKey.replace(/\s+/g, '_')}_Feb2026.txt`;
+            
+            // For mobile compatibility
+            a.style.display = 'none';
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('regulationModal');
+            if (event.target == modal) {
+                closeModal();
+            }
         }
 
         // Set up SVG
@@ -713,7 +906,7 @@ monitor for transition to mandatory requirements and follow sector-specific rule
                                        ${typeLabel}<br/>
                                        ${reg.name}<br/>
                                        <em>Status: ${reg.status}</em><br/>
-                                       <small>Click to download details</small>`);
+                                       <small>Click to view & download details</small>`);
                         } else {
                             tooltip
                                 .style("opacity", 1)
@@ -731,7 +924,7 @@ monitor for transition to mandatory requirements and follow sector-specific rule
                     .on("click", function(event, d) {
                         const regulationKey = hasRegulation(d.properties.name);
                         if (regulationKey) {
-                            downloadRegulation(regulationKey);
+                            showRegulationModal(regulationKey);
                         }
                     });
             })
