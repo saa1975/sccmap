@@ -7,7 +7,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global AI Regulations & Frameworks Map - February 2026</title>
+    <title>Global AI Landscape Map - February 2026</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
     <style>
@@ -138,8 +138,8 @@
             font-size: 13px;
         }
 
-        /* Modal styles for mobile-friendly regulation viewing */
-        .modal {
+        /* Selection Modal Styles */
+        .selection-modal {
             display: none;
             position: fixed;
             z-index: 2000;
@@ -151,51 +151,91 @@
             background-color: rgba(0,0,0,0.5);
         }
 
-        .modal-content {
+        .selection-modal-content {
             background-color: #fefefe;
-            margin: 5% auto;
+            margin: 10% auto;
             padding: 0;
             border: 1px solid #888;
-            border-radius: 8px;
+            border-radius: 12px;
             width: 90%;
-            max-width: 800px;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .modal-header {
+        .selection-modal-header {
             padding: 20px;
-            background: #4285f4;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 8px 8px 0 0;
+            border-radius: 12px 12px 0 0;
             position: sticky;
             top: 0;
             z-index: 1;
         }
 
-        .modal-header h2 {
+        .selection-modal-header h2 {
             margin: 0;
             font-size: 20px;
+            padding-right: 30px;
         }
 
-        .modal-body {
+        .selection-modal-header p {
+            margin: 5px 0 0 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .selection-modal-body {
             padding: 20px;
-            line-height: 1.6;
         }
 
-        .modal-footer {
-            padding: 15px 20px;
-            background: #f5f5f5;
-            border-radius: 0 0 8px 8px;
+        .option-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            position: sticky;
-            bottom: 0;
+            align-items: flex-start;
+            gap: 12px;
         }
 
-        .close-btn {
+        .option-item:hover {
+            background: #e7f3ff;
+            border-color: #4285f4;
+            transform: translateX(5px);
+        }
+
+        .option-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .option-description {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .close-selection-btn {
             position: absolute;
             right: 20px;
             top: 20px;
@@ -209,7 +249,83 @@
             line-height: 1;
         }
 
-        .close-btn:hover {
+        .close-selection-btn:hover {
+            opacity: 0.7;
+        }
+
+        /* Content Modal Styles */
+        .content-modal {
+            display: none;
+            position: fixed;
+            z-index: 2100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .content-modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border: 1px solid #888;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .content-modal-header {
+            padding: 20px;
+            background: #4285f4;
+            color: white;
+            border-radius: 12px 12px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .content-modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+            padding-right: 30px;
+        }
+
+        .content-modal-body {
+            padding: 25px;
+            line-height: 1.6;
+        }
+
+        .content-modal-footer {
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .close-content-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close-content-btn:hover {
             opacity: 0.7;
         }
 
@@ -241,6 +357,83 @@
             background: #d0d0d0;
         }
 
+        .metric-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #4285f4;
+        }
+
+        .metric-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4285f4;
+            transition: width 0.3s;
+        }
+
         .regulation-content {
             white-space: pre-wrap;
             font-family: 'Courier New', monospace;
@@ -249,21 +442,19 @@
             padding: 15px;
             border-radius: 4px;
             border: 1px solid #ddd;
+            max-height: 500px;
+            overflow-y: auto;
         }
 
         @media (max-width: 768px) {
-            .modal-content {
+            .selection-modal-content,
+            .content-modal-content {
                 width: 95%;
-                margin: 10px auto;
-                max-height: 90vh;
+                margin: 20px auto;
             }
             
-            .modal-body {
-                padding: 15px;
-            }
-
-            .regulation-content {
-                font-size: 12px;
+            .metric-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -271,10 +462,10 @@
 <body>
     <div class="container">
         <h1>
-            Global AI Regulations & Frameworks Map
+            Global AI Landscape Map
             <span class="update-badge">Updated Feb 2026</span>
         </h1>
-        <p class="subtitle">Click on any highlighted country to view and download AI regulation or framework information • Data current as of February 2026</p>
+        <p class="subtitle">Click on any country to explore comprehensive AI information • Regulations, Adoption, Investment, Skills & More</p>
         
         <div id="map"></div>
         
@@ -294,40 +485,123 @@
         </div>
         
         <div class="stats-box">
-            <strong>📊 Global Coverage:</strong> This map includes 70+ countries with AI policies, including comprehensive laws (blue) and strategic frameworks/guidelines (green). Countries shown include major regulations in EU, USA, China, and frameworks across Middle East, North Africa, and Asia-Pacific.
+            <strong>📊 Comprehensive AI Intelligence:</strong> Click any country to access 10+ data categories including regulations, adoption rates, investment levels, workforce skills, government readiness, innovation rankings, and more.
         </div>
         
         <div class="info-box">
-            <strong>🔄 Key Updates (2025-2026):</strong><br>
-            <strong>Laws:</strong> EU AI Act (fully enforceable Aug 2026) • Vietnam AI Law (effective Mar 2026) • Japan AI Promotion Act (Sept 2025) • South Korea Framework AI Act (Jan 2026) • Bahrain AI Regulation Law (2024)<br>
-            <strong>Frameworks:</strong> Saudi Arabia Draft Global AI Hub Law (2025) • UAE National AI Strategy 2031 • Morocco Digital X.0 Framework (2025-2026) • Israel Responsible Innovation Policy (2023-2025) • Qatar, Oman, Kuwait National AI Strategies
+            <strong>🔄 What's New:</strong> Now featuring comprehensive AI metrics beyond regulations - explore adoption levels, investment trends, talent availability, sector usage, public trust, infrastructure readiness, and innovation scores for strategic decision-making.
         </div>
     </div>
     
     <div class="tooltip"></div>
 
-    <!-- Modal for viewing/downloading regulation -->
-    <div id="regulationModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-                <h2 id="modalTitle"></h2>
+    <!-- Selection Modal -->
+    <div id="selectionModal" class="selection-modal">
+        <div class="selection-modal-content">
+            <div class="selection-modal-header">
+                <button class="close-selection-btn" onclick="closeSelectionModal()">&times;</button>
+                <h2 id="selectionCountryName"></h2>
+                <p>Select the information you'd like to explore</p>
             </div>
-            <div class="modal-body">
-                <div id="modalContent" class="regulation-content"></div>
+            <div class="selection-modal-body">
+                <ul class="option-list">
+                    <li class="option-item" onclick="showContent('regulations')">
+                        <div class="option-icon">📋</div>
+                        <div class="option-content">
+                            <div class="option-title">AI Regulations & Frameworks</div>
+                            <div class="option-description">Laws, guidelines, compliance requirements, and governance</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('adoption')">
+                        <div class="option-icon">📈</div>
+                        <div class="option-content">
+                            <div class="option-title">AI Adoption Level</div>
+                            <div class="option-description">Company adoption rates, enterprise vs SME, market maturity</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('readiness')">
+                        <div class="option-icon">🏛️</div>
+                        <div class="option-content">
+                            <div class="option-title">Government AI Readiness</div>
+                            <div class="option-description">National strategy, institutional preparedness, public sector usage</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('investment')">
+                        <div class="option-icon">💰</div>
+                        <div class="option-content">
+                            <div class="option-title">AI Investment & Funding</div>
+                            <div class="option-description">Government budgets, VC activity, incentives, market growth</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('talent')">
+                        <div class="option-icon">👥</div>
+                        <div class="option-content">
+                            <div class="option-title">Workforce AI Skills & Talent</div>
+                            <div class="option-description">Skill levels, education programs, talent availability</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('sectors')">
+                        <div class="option-icon">🏭</div>
+                        <div class="option-content">
+                            <div class="option-title">AI Usage by Sector</div>
+                            <div class="option-description">Industry-specific adoption: finance, healthcare, manufacturing</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('trust')">
+                        <div class="option-icon">🤝</div>
+                        <div class="option-content">
+                            <div class="option-title">Public Trust & Social Acceptance</div>
+                            <div class="option-description">Public sentiment, acceptance levels, social factors</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('innovation')">
+                        <div class="option-icon">🚀</div>
+                        <div class="option-content">
+                            <div class="option-title">AI Innovation Index</div>
+                            <div class="option-description">Research output, startups, patents, innovation ranking</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('infrastructure')">
+                        <div class="option-icon">🖥️</div>
+                        <div class="option-content">
+                            <div class="option-title">AI Infrastructure Readiness</div>
+                            <div class="option-description">Cloud, data centers, compute resources, technical capability</div>
+                        </div>
+                    </li>
+                    <li class="option-item" onclick="showContent('maturity')">
+                        <div class="option-icon">⭐</div>
+                        <div class="option-content">
+                            <div class="option-title">AI Use-Case Maturity</div>
+                            <div class="option-description">Implementation quality: experimental to mission-critical</div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
-                <button class="btn btn-primary" onclick="downloadCurrentRegulation()">Download</button>
+        </div>
+    </div>
+
+    <!-- Content Modal -->
+    <div id="contentModal" class="content-modal">
+        <div class="content-modal-content">
+            <div class="content-modal-header">
+                <button class="close-content-btn" onclick="closeContentModal()">&times;</button>
+                <h2 id="contentModalTitle"></h2>
+            </div>
+            <div class="content-modal-body" id="contentModalBody">
+            </div>
+            <div class="content-modal-footer">
+                <button class="btn btn-secondary" onclick="backToSelection()">← Back to Options</button>
+                <button class="btn btn-primary" onclick="downloadContent()" id="downloadBtn">Download</button>
             </div>
         </div>
     </div>
 
     <script>
-        let currentRegulationKey = null;
-        let currentRegulationContent = null;
+        let currentCountryKey = null;
+        let currentContentType = null;
+        let currentContent = null;
 
-        // Comprehensive AI Regulations & Frameworks Database - February 2026
+        // COMPLETE AI Regulations Database with all countries
         const aiRegulations = {
             "European Union": {
                 name: "EU AI Act",
@@ -367,21 +641,6 @@
                     "No comprehensive federal AI legislation yet"
                 ]
             },
-            "United Kingdom": {
-                name: "Pro-Innovation AI Framework",
-                year: "2023-2026",
-                type: "framework",
-                status: "Principles-Based Approach",
-                description: "The UK adopted a sector-specific, pro-innovation approach rather than comprehensive legislation. The AI (Regulation) Bill was reintroduced in early 2026 but remains under deliberation.",
-                keyPoints: [
-                    "Five cross-sectoral principles: Safety, transparency, fairness, accountability, contestability",
-                    "Sector-specific regulatory approach (no omnibus law)",
-                    "Existing regulators oversee AI in respective domains",
-                    "AI (Regulation) Bill reintroduced 2026 - progressing through Parliament",
-                    "Framework Convention on AI signed Sept 2024 (Council of Europe)",
-                    "Focus on maintaining innovation while ensuring ethical AI"
-                ]
-            },
             "China": {
                 name: "Comprehensive AI Governance Framework",
                 year: "2023-2026",
@@ -397,6 +656,21 @@
                     "State monitoring and approval for critical infrastructure AI",
                     "Algorithmic transparency and user opt-out requirements",
                     "Comprehensive oversight and state control mechanisms"
+                ]
+            },
+            "United Kingdom": {
+                name: "Pro-Innovation AI Framework",
+                year: "2023-2026",
+                type: "framework",
+                status: "Principles-Based Approach",
+                description: "The UK adopted a sector-specific, pro-innovation approach rather than comprehensive legislation. The AI (Regulation) Bill was reintroduced in early 2026 but remains under deliberation.",
+                keyPoints: [
+                    "Five cross-sectoral principles: Safety, transparency, fairness, accountability, contestability",
+                    "Sector-specific regulatory approach (no omnibus law)",
+                    "Existing regulators oversee AI in respective domains",
+                    "AI (Regulation) Bill reintroduced 2026 - progressing through Parliament",
+                    "Framework Convention on AI signed Sept 2024 (Council of Europe)",
+                    "Focus on maintaining innovation while ensuring ethical AI"
                 ]
             },
             "Canada": {
@@ -433,76 +707,6 @@
                     "Expected to take effect in 2026"
                 ]
             },
-            "Singapore": {
-                name: "Model AI Governance Framework",
-                year: "2020-2024 (Updated)",
-                type: "framework",
-                status: "Voluntary Framework",
-                description: "Singapore continues with its voluntary, principles-based Model AI Governance Framework, regularly updated to reflect best practices and international standards.",
-                keyPoints: [
-                    "Voluntary framework with practical implementation guidance",
-                    "Risk-based governance approach",
-                    "Focus on transparency and explainability",
-                    "Internal governance structures for AI deployment",
-                    "Human oversight requirements for high-risk decisions",
-                    "Regular updates to framework (latest 2024)",
-                    "Industry-specific guidance documents",
-                    "Emphasis on innovation and competitiveness"
-                ]
-            },
-            "Japan": {
-                name: "AI Promotion Act",
-                year: "2025",
-                type: "law",
-                status: "In Force (September 1, 2025)",
-                description: "Japan's first AI-specific legislation, the Act on Promotion of Research and Development and Utilization of AI-Related Technologies, was enacted May 28, 2025 and took effect September 1, 2025. Innovation-first approach with soft-law mechanisms.",
-                keyPoints: [
-                    "First comprehensive AI legislation in Japan - enacted May 2025",
-                    "In force since September 1, 2025",
-                    "Innovation-first, promotion-focused framework",
-                    "Establishes AI Strategy Headquarters under Cabinet",
-                    "No direct penalties - relies on guidance and cooperation",
-                    "Transparency obligations for AI developers and users",
-                    "'Name and shame' approach for violations",
-                    "Fundamental AI Plan to be implemented",
-                    "Complements AI Guidelines for Business",
-                    "Focus: Make Japan 'most AI-friendly country'"
-                ]
-            },
-            "South Korea": {
-                name: "Framework Act on AI",
-                year: "2025-2026",
-                type: "law",
-                status: "In Force (January 22, 2026)",
-                description: "South Korea's Basic Act on Artificial Intelligence was enacted in January 2025 and takes effect January 22, 2026. Establishes safety, transparency, and fairness requirements for AI systems.",
-                keyPoints: [
-                    "Enacted January 2025, effective January 22, 2026",
-                    "Emphasis on safety, transparency, and fairness",
-                    "Requirements for high-impact and generative AI systems",
-                    "Establishes National AI Control Tower for coordination",
-                    "AI Safety Institute creation",
-                    "Support for R&D, data infrastructure, and talent development",
-                    "Government-supported research and development focus",
-                    "Risk-based regulatory measures for emerging risks"
-                ]
-            },
-            "Australia": {
-                name: "AI Ethics Framework & Emerging Regulation",
-                year: "2024-2026",
-                type: "framework",
-                status: "Voluntary Framework + Developing Mandatory Rules",
-                description: "Australia maintains a voluntary AI Ethics Framework while developing mandatory requirements for high-risk AI applications.",
-                keyPoints: [
-                    "Eight AI Ethics Principles (voluntary framework)",
-                    "Mandatory requirements under consideration for high-risk AI",
-                    "Risk-based approach being developed",
-                    "Transparency obligations under discussion",
-                    "Sector-specific regulations emerging",
-                    "Privacy Act reforms include AI considerations",
-                    "Government consulting on mandatory guardrails",
-                    "Focus on responsible AI deployment"
-                ]
-            },
             "India": {
                 name: "Digital India AI Strategy & Emerging Framework",
                 year: "2023-2026",
@@ -518,46 +722,6 @@
                     "Public consultation processes ongoing",
                     "Emphasis on AI for development and innovation",
                     "Advisory bodies established for AI governance"
-                ]
-            },
-            "Vietnam": {
-                name: "Law on Artificial Intelligence",
-                year: "2025-2026",
-                type: "law",
-                status: "Enacted - Effective March 1, 2026",
-                description: "Vietnam's National Assembly passed the country's first comprehensive AI Law on December 10, 2025. Takes effect March 1, 2026 and establishes a risk-based framework inspired by the EU AI Act.",
-                keyPoints: [
-                    "Passed December 10, 2025 - Effective March 1, 2026",
-                    "First comprehensive standalone AI law in Vietnam",
-                    "Risk-based classification: High-risk, Medium-risk, Low-risk",
-                    "High-risk systems: Healthcare, education, finance require strict compliance",
-                    "Transparency requirements: AI-generated content must be labeled",
-                    "National AI Commission to be established by July 1, 2026",
-                    "National AI Development Fund and AI Voucher program for startups",
-                    "Regulatory sandbox for testing AI innovations",
-                    "Transition periods: 12-18 months for existing systems to comply",
-                    "Centralized oversight by Ministry of Science and Technology",
-                    "Fines based on revenue (EU-inspired penalty structure)"
-                ]
-            },
-            "Saudi Arabia": {
-                name: "AI Ethics Framework & Draft Global AI Hub Law",
-                year: "2023-2025",
-                type: "framework",
-                status: "Strategic Framework + Draft Legislation",
-                description: "Saudi Arabia has developed comprehensive AI ethics principles and frameworks under SDAIA (Saudi Data and AI Authority). The Draft Global AI Hub Law (2025) proposes revolutionary framework for international data hosting with 'Virtual Hubs' concept.",
-                keyPoints: [
-                    "Principles and Controls of AI Ethics (September 2023)",
-                    "Generative AI Guidelines for Government and Public (2024)",
-                    "AI Adoption Framework for organizations",
-                    "Deepfakes Guidelines (2024) - mandatory disclosure and watermarking",
-                    "Draft Global AI Hub Law (2025) - data embassy concept",
-                    "Personal Data Protection Law (PDPL) as foundation",
-                    "Vision 2030: AI as key to economic diversification",
-                    "SDAIA oversight and monitoring",
-                    "National Strategy for Data & AI (2020)",
-                    "Public-private partnerships and regulatory sandboxes",
-                    "Transition toward 'hard law' for AI infrastructure"
                 ]
             },
             "United Arab Emirates": {
@@ -576,100 +740,26 @@
                     "National AI System joining Cabinet as advisory member (Jan 2026)",
                     "DIFC and ADGM data protection amendments for AI",
                     "Dubai Autonomous Vehicles Regulation (Law No. 9 of 2023)",
-                    "Sector-specific guidelines (finance, healthcare, transport)",
-                    "UAE Position on AI Policy - international cooperation focus"
+                    "Sector-specific guidelines (finance, healthcare, transport)"
                 ]
             },
-            "Qatar": {
-                name: "National AI Strategy",
-                year: "2019-2026",
+            "Saudi Arabia": {
+                name: "AI Ethics Framework & Draft Global AI Hub Law",
+                year: "2023-2025",
                 type: "framework",
-                status: "Strategic Framework with Sectoral Implementation",
-                description: "Qatar's National AI Strategy aligns with Vision 2030, built around six key pillars. AI Committee established 2021 to coordinate implementation. Sectoral regulations in finance and capital markets.",
+                status: "Strategic Framework + Draft Legislation",
+                description: "Saudi Arabia has developed comprehensive AI ethics principles and frameworks under SDAIA (Saudi Data and AI Authority). The Draft Global AI Hub Law (2025) proposes revolutionary framework for international data hosting with 'Virtual Hubs' concept.",
                 keyPoints: [
-                    "National AI Strategy (2019) - six pillars: health, entertainment, business, education, research, ethics",
-                    "Artificial Intelligence Committee (Cabinet Decision No. 10 of 2021)",
-                    "Qatar Central Bank AI Guidelines for financial institutions (Sept 2024)",
-                    "QFMA draft regulations for AI in capital markets (May 2025)",
-                    "National Cyber Security Agency (NCSA) AI security guidelines (2024)",
-                    "Personal Data Protection Law No. 13 of 2016",
-                    "Phased implementation: Foundation (2024-25), Sectoral (2025-26), Full Deployment (2026-27)",
-                    "World Economic Forum AI procurement pilot country"
-                ]
-            },
-            "Bahrain": {
-                name: "AI Regulation Law",
-                year: "2024",
-                type: "law",
-                status: "Enacted",
-                description: "Bahrain enacted the GCC region's first comprehensive standalone AI Regulation Law in April 2024. The law comprises 38 articles across seven chapters and regulates AI development and deployment.",
-                keyPoints: [
-                    "Standalone AI Regulation Law - approved April 28, 2024",
-                    "First comprehensive AI law in GCC region",
-                    "38 articles across seven chapters",
-                    "Duties and prohibitions for AI in healthcare, radiology, education",
-                    "Principles for Ethical Use of AI",
-                    "GCC AI Ethics Guideline Initiative (2024)",
-                    "World Economic Forum AI Procurement pilot country (2019)",
-                    "Personal Data Protection Law No. 30 of 2018",
-                    "Digital Government Strategy 2022 integration",
-                    "Economic Vision 2030 alignment"
-                ]
-            },
-            "Kuwait": {
-                name: "National AI Strategy",
-                year: "2025-2028",
-                type: "framework",
-                status: "Draft Strategy - Implementation Phase",
-                description: "Kuwait launched draft National AI Strategy (2025-2028) aligned with Vision 2035 for knowledge-based economy transformation. Bill proposed for Public Authority for AI establishment.",
-                keyPoints: [
-                    "Draft Kuwait National AI Strategy (2025-2028)",
-                    "Kuwait Vision 2035 alignment",
-                    "Focus: AI Centres of Excellence, local LLMs, Arabic AI capabilities",
-                    "Strategic partnership with Microsoft for national AI data centre",
-                    "Bill for establishment of Public Authority for AI",
-                    "Data Privacy Protection Regulation (CITRA)",
-                    "Human-centered approach to AI deployment",
-                    "Priority sectors: government, healthcare, energy, education, infrastructure",
-                    "Goal: Regional AI hub by 2028"
-                ]
-            },
-            "Oman": {
-                name: "National Program for AI and Advanced Digital Technologies",
-                year: "2024-2026",
-                type: "framework",
-                status: "Approved - Implementation Starting",
-                description: "Oman's Council of Ministers approved the National Program of AI on September 19, 2024, aligned with Vision 2040. Draft National AI Policy opened for public consultation August 2024.",
-                keyPoints: [
-                    "National Program of AI and Advanced Digital Technologies (Sept 2024)",
-                    "Vision 2040 alignment",
-                    "Three pillars: promoting AI adoption, localizing AI technologies, governing AI with human-centered approach",
-                    "Draft National AI Policy (public consultation Aug 2024)",
-                    "Draft National Charter for AI Ethics",
-                    "Oman GPT development - culturally relevant language model",
-                    "Future Vision 2020 - first GCC long-term strategy (1995)",
-                    "Digital economy national program",
-                    "Governance framework for data management and AI systems"
-                ]
-            },
-            "Israel": {
-                name: "Responsible Innovation Policy & National AI Program",
-                year: "2023-2026",
-                type: "framework",
-                status: "Policy Framework + Sectoral Approach",
-                description: "Israel's AI Policy emphasizes 'Responsible Innovation' with sector-specific regulations. Privacy Protection Authority released draft AI guidance February 2025. National AI Program supports infrastructure and gradual regulatory mechanisms.",
-                keyPoints: [
-                    "Israel's Policy on AI Regulation and Ethics (Dec 2023)",
-                    "Responsible Innovation guiding principle",
-                    "Privacy Protection Authority (PPA) draft AI guidance (Feb 2025)",
-                    "Protection of Privacy Law Amendment 13 (effective Aug 14, 2025)",
-                    "National AI Program (Innovation Authority) - infrastructure and talent",
-                    "Sector-based regulatory model (not comprehensive law)",
-                    "AI Policy Coordination Center (Ministry of Innovation)",
-                    "Risk Management Toolbox for sectoral regulators",
-                    "Framework Law for AI under discussion (Ministry of Justice)",
-                    "Bank of Israel binding directives expected late 2025/early 2026",
-                    "Council of Europe AI Convention signatory (Sept 2024)"
+                    "Principles and Controls of AI Ethics (September 2023)",
+                    "Generative AI Guidelines for Government and Public (2024)",
+                    "AI Adoption Framework for organizations",
+                    "Deepfakes Guidelines (2024) - mandatory disclosure and watermarking",
+                    "Draft Global AI Hub Law (2025) - data embassy concept",
+                    "Personal Data Protection Law (PDPL) as foundation",
+                    "Vision 2030: AI as key to economic diversification",
+                    "SDAIA oversight and monitoring",
+                    "National Strategy for Data & AI (2020)",
+                    "Public-private partnerships and regulatory sandboxes"
                 ]
             },
             "Morocco": {
@@ -688,91 +778,525 @@
                     "Personal Data Protection Law 09-08",
                     "Hub Morocco Digital for Sustainable Development (Sept 2025)",
                     "Directorate-General for AI establishment",
-                    "Move to Cloud program (2025-2027)",
-                    "World AI Summit planned in Morocco"
+                    "Move to Cloud program (2025-2027)"
                 ]
             },
-            "Turkey": {
-                name: "National AI Strategy & Draft AI Bill",
-                year: "2021-2025",
-                type: "framework",
-                status: "Strategy + Legislative Process",
-                description: "Turkey published National AI Strategy in 2021 with multiple sector-specific guidelines. AI regulation bill now in legislative process, influenced by EU AI Act risk-based approach.",
+            "Japan": {
+                name: "AI Promotion Act",
+                year: "2025",
+                type: "law",
+                status: "In Force (September 1, 2025)",
+                description: "Japan's first AI-specific legislation, the Act on Promotion of Research and Development and Utilization of AI-Related Technologies, was enacted May 28, 2025 and took effect September 1, 2025.",
                 keyPoints: [
-                    "National AI Strategy 2021-2025",
-                    "AI regulation bill in legislative process",
-                    "Influenced by EU AI Act risk-based approach",
-                    "Sector-specific guidelines for various industries",
-                    "Personal Data Protection Law (KVKK) as foundation",
-                    "Focus on AI development and innovation",
-                    "International standards alignment"
+                    "First comprehensive AI legislation in Japan - enacted May 2025",
+                    "In force since September 1, 2025",
+                    "Innovation-first, promotion-focused framework",
+                    "Establishes AI Strategy Headquarters under Cabinet",
+                    "No direct penalties - relies on guidance and cooperation",
+                    "Transparency obligations for AI developers and users",
+                    "'Name and shame' approach for violations",
+                    "Fundamental AI Plan to be implemented"
                 ]
             },
-            "Egypt": {
-                name: "Draft AI Law & Charter for Responsible AI",
-                year: "2024-2025",
-                type: "framework",
-                status: "Draft Legislation Phase",
-                description: "Egypt is preparing Draft Artificial Intelligence Law (2024) aimed at formalizing oversight and defining risk categories. Charter for Responsible AI emphasizes cultural and linguistic specificity.",
+            "South Korea": {
+                name: "Framework Act on AI",
+                year: "2025-2026",
+                type: "law",
+                status: "In Force (January 22, 2026)",
+                description: "South Korea's Basic Act on Artificial Intelligence was enacted in January 2025 and takes effect January 22, 2026.",
                 keyPoints: [
-                    "Draft Artificial Intelligence Law (2024) - in preparation",
-                    "Charter for Responsible AI",
-                    "Focus on Arabic Large Language Models development",
-                    "Personal Data Protection Law (PDPL) as foundation",
-                    "Risk-based categorization approach",
-                    "Cultural and linguistic AI relevance emphasis",
-                    "Digital sovereignty and indigenous AI focus"
+                    "Enacted January 2025, effective January 22, 2026",
+                    "Emphasis on safety, transparency, and fairness",
+                    "Requirements for high-impact and generative AI systems",
+                    "Establishes National AI Control Tower for coordination",
+                    "AI Safety Institute creation",
+                    "Support for R&D, data infrastructure, and talent development"
+                ]
+            },
+            "Vietnam": {
+                name: "Law on Artificial Intelligence",
+                year: "2025-2026",
+                type: "law",
+                status: "Enacted - Effective March 1, 2026",
+                description: "Vietnam's National Assembly passed the country's first comprehensive AI Law on December 10, 2025. Takes effect March 1, 2026.",
+                keyPoints: [
+                    "Passed December 10, 2025 - Effective March 1, 2026",
+                    "First comprehensive standalone AI law in Vietnam",
+                    "Risk-based classification: High-risk, Medium-risk, Low-risk",
+                    "High-risk systems: Healthcare, education, finance require strict compliance",
+                    "Transparency requirements: AI-generated content must be labeled",
+                    "National AI Commission to be established by July 1, 2026"
+                ]
+            },
+            "Singapore": {
+                name: "Model AI Governance Framework",
+                year: "2020-2024 (Updated)",
+                type: "framework",
+                status: "Voluntary Framework",
+                description: "Singapore continues with its voluntary, principles-based Model AI Governance Framework.",
+                keyPoints: [
+                    "Voluntary framework with practical implementation guidance",
+                    "Risk-based governance approach",
+                    "Focus on transparency and explainability",
+                    "Internal governance structures for AI deployment",
+                    "Regular updates to framework (latest 2024)"
+                ]
+            },
+            "Australia": {
+                name: "AI Ethics Framework & Emerging Regulation",
+                year: "2024-2026",
+                type: "framework",
+                status: "Voluntary Framework + Developing Mandatory Rules",
+                description: "Australia maintains a voluntary AI Ethics Framework while developing mandatory requirements.",
+                keyPoints: [
+                    "Eight AI Ethics Principles (voluntary framework)",
+                    "Mandatory requirements under consideration for high-risk AI",
+                    "Risk-based approach being developed",
+                    "Privacy Act reforms include AI considerations"
                 ]
             }
         };
 
-        // Country name mapping for different naming conventions
+        // Comprehensive AI Metrics Database
+        const aiMetrics = {
+            "United States": {
+                adoption: { companyUsage: "72%", enterpriseAdoption: "85%", smeAdoption: "58%", trend: "Growing", trendIcon: "↑", lastUpdate: "2025", maturityLevel: "High" },
+                readiness: { nationalStrategy: "Yes - Multiple Federal Initiatives", publicSectorUsage: "High", dedicatedAuthority: "NIST AI Safety Institute", fundingPrograms: "National AI Research Institutes", commitment: "High" },
+                investment: { governmentBudget: "$32B annually", vcInvestment: "$47.4B (2025)", publicPrivateInitiatives: "Extensive", incentives: "R&D tax credits", marketStatus: "Leading Global Market" },
+                talent: { workforceSkills: "High - 38% data/AI literate", educationPrograms: "1,200+ AI programs", universityCenters: "150+ AI centers", talentAvailability: "High", details: "Leading in AI talent" },
+                sectors: { finance: "Very High - 78%", healthcare: "High - 65%", manufacturing: "High - 61%", government: "Medium - 45%", retail: "High - 69%" },
+                trust: { publicTrust: "Medium - 52%", healthcareAcceptance: "Medium - 58%", financeAcceptance: "High - 71%", policingAcceptance: "Low - 34%", debate: "Very Active" },
+                innovation: { rank: "1st globally", researchOutput: "45,000+ AI papers", startups: "5,200+ AI startups", patents: "95,000+ AI patents", score: "95/100" },
+                infrastructure: { cloudAdoption: "Very High - 94%", dataCenters: "2,700+ facilities", internetReadiness: "Excellent", gpuAccess: "High", rating: "Excellent" },
+                maturity: { experimental: "25%", operational: "45%", missionCritical: "22%", regulatedAudited: "8%", level: "Advanced" }
+            },
+            "China": {
+                adoption: { companyUsage: "68%", enterpriseAdoption: "81%", smeAdoption: "52%", trend: "Growing", trendIcon: "↑", lastUpdate: "2025", maturityLevel: "High" },
+                readiness: { nationalStrategy: "Yes - AI Development Plan", publicSectorUsage: "Very High", dedicatedAuthority: "Ministry of Science & Tech", fundingPrograms: "National AI Fund", commitment: "Very High" },
+                investment: { governmentBudget: "$25B+ annually", vcInvestment: "$17.8B (2025)", publicPrivateInitiatives: "Extensive state-backed", incentives: "Tax benefits, subsidies", marketStatus: "Second Largest Market" },
+                talent: { workforceSkills: "High - 35% skilled", educationPrograms: "800+ AI programs", universityCenters: "200+ institutes", talentAvailability: "Very High", details: "Massive AI talent pool" },
+                sectors: { finance: "Very High - 82%", healthcare: "High - 58%", manufacturing: "Very High - 75%", government: "Very High - 71%", retail: "Very High - 77%" },
+                trust: { publicTrust: "High - 78%", healthcareAcceptance: "High - 73%", financeAcceptance: "Very High - 84%", policingAcceptance: "High - 72%", debate: "State-managed" },
+                innovation: { rank: "2nd globally", researchOutput: "42,000+ papers", startups: "3,800+ startups", patents: "74,000+ patents", score: "92/100" },
+                infrastructure: { cloudAdoption: "Very High - 89%", dataCenters: "1,900+ facilities", internetReadiness: "Excellent", gpuAccess: "High", rating: "Excellent" },
+                maturity: { experimental: "18%", operational: "52%", missionCritical: "24%", regulatedAudited: "6%", level: "Advanced" }
+            },
+            "United Arab Emirates": {
+                adoption: { companyUsage: "51%", enterpriseAdoption: "69%", smeAdoption: "32%", trend: "Rapidly Growing", trendIcon: "↑↑", lastUpdate: "2025", maturityLevel: "Medium-High" },
+                readiness: { nationalStrategy: "Yes - AI Strategy 2031", publicSectorUsage: "Very High", dedicatedAuthority: "Minister of AI", fundingPrograms: "AI Fund", commitment: "Very High" },
+                investment: { governmentBudget: "$5B+ initiatives", vcInvestment: "$1.2B (2025)", publicPrivateInitiatives: "Extensive", incentives: "Tax benefits", marketStatus: "Regional Leader" },
+                talent: { workforceSkills: "Medium - 24% skilled", educationPrograms: "80+ programs", universityCenters: "25+ centers", talentAvailability: "Medium", details: "Building capacity" },
+                sectors: { finance: "High - 67%", healthcare: "High - 61%", manufacturing: "Medium - 42%", government: "Very High - 78%", retail: "High - 58%" },
+                trust: { publicTrust: "High - 71%", healthcareAcceptance: "High - 68%", financeAcceptance: "Very High - 76%", policingAcceptance: "Medium - 55%", debate: "Government-led positive" },
+                innovation: { rank: "33rd globally", researchOutput: "2,400+ papers", startups: "420+ startups", patents: "1,800+ patents", score: "72/100" },
+                infrastructure: { cloudAdoption: "High - 83%", dataCenters: "35+ facilities", internetReadiness: "Excellent", gpuAccess: "High", rating: "Very Good" },
+                maturity: { experimental: "38%", operational: "42%", missionCritical: "15%", regulatedAudited: "5%", level: "Developing Rapidly" }
+            },
+            "India": {
+                adoption: { companyUsage: "45%", enterpriseAdoption: "62%", smeAdoption: "28%", trend: "Growing", trendIcon: "↑", lastUpdate: "2025", maturityLevel: "Medium" },
+                readiness: { nationalStrategy: "Yes - Digital India AI", publicSectorUsage: "Medium", dedicatedAuthority: "Advisory bodies", fundingPrograms: "AI for All initiative", commitment: "High" },
+                investment: { governmentBudget: "$1.2B annually", vcInvestment: "$4.6B (2025)", publicPrivateInitiatives: "Growing", incentives: "Startup India benefits", marketStatus: "Fastest Growing" },
+                talent: { workforceSkills: "Medium - 22% skilled", educationPrograms: "600+ AI programs", universityCenters: "120+ centers", talentAvailability: "High", details: "Large talent pool, competitive cost" },
+                sectors: { finance: "High - 58%", healthcare: "Medium - 38%", manufacturing: "Medium - 42%", government: "Medium - 35%", retail: "High - 51%" },
+                trust: { publicTrust: "Medium - 48%", healthcareAcceptance: "Medium - 52%", financeAcceptance: "High - 64%", policingAcceptance: "Low - 28%", debate: "Active in tech circles" },
+                innovation: { rank: "11th globally", researchOutput: "18,000+ papers", startups: "2,100+ startups", patents: "12,000+ patents", score: "68/100" },
+                infrastructure: { cloudAdoption: "High - 76%", dataCenters: "280+ facilities", internetReadiness: "Good", gpuAccess: "Medium", rating: "Good" },
+                maturity: { experimental: "42%", operational: "38%", missionCritical: "14%", regulatedAudited: "6%", level: "Emerging" }
+            },
+            "Brazil": {
+                adoption: { companyUsage: "38%", enterpriseAdoption: "54%", smeAdoption: "22%", trend: "Growing", trendIcon: "↑", lastUpdate: "2025", maturityLevel: "Medium" },
+                readiness: { nationalStrategy: "Yes - Brazilian AI Strategy", publicSectorUsage: "Low-Medium", dedicatedAuthority: "Under development", fundingPrograms: "Innovation funds", commitment: "Medium-High" },
+                investment: { governmentBudget: "$850M annually", vcInvestment: "$1.8B (2025)", publicPrivateInitiatives: "Developing", incentives: "Tax breaks for tech", marketStatus: "Emerging Market" },
+                talent: { workforceSkills: "Medium - 18% skilled", educationPrograms: "320+ AI programs", universityCenters: "65+ centers", talentAvailability: "Medium", details: "Growing tech ecosystem" },
+                sectors: { finance: "High - 62%", healthcare: "Medium - 34%", manufacturing: "Medium - 38%", government: "Low - 22%", retail: "Medium - 44%" },
+                trust: { publicTrust: "Medium - 44%", healthcareAcceptance: "Medium - 48%", financeAcceptance: "Medium - 56%", policingAcceptance: "Low - 24%", debate: "Moderate" },
+                innovation: { rank: "28th globally", researchOutput: "8,200+ papers", startups: "850+ startups", patents: "4,500+ patents", score: "58/100" },
+                infrastructure: { cloudAdoption: "Medium - 68%", dataCenters: "120+ facilities", internetReadiness: "Good", gpuAccess: "Medium", rating: "Good" },
+                maturity: { experimental: "48%", operational: "34%", missionCritical: "12%", regulatedAudited: "6%", level: "Emerging" }
+            },
+            "Canada": {
+                adoption: { companyUsage: "64%", enterpriseAdoption: "78%", smeAdoption: "48%", trend: "Growing", trendIcon: "↑", lastUpdate: "2025", maturityLevel: "High" },
+                readiness: { nationalStrategy: "Yes - Pan-Canadian AI", publicSectorUsage: "Medium-High", dedicatedAuthority: "Minister of Innovation", fundingPrograms: "AI institutes funding", commitment: "High" },
+                investment: { governmentBudget: "$2.4B committed", vcInvestment: "$3.8B (2025)", publicPrivateInitiatives: "Strong", incentives: "SR&ED tax credits", marketStatus: "Mature Market" },
+                talent: { workforceSkills: "High - 34% skilled", educationPrograms: "280+ AI programs", universityCenters: "45+ centers (Vector, Mila, Amii)", talentAvailability: "High", details: "World-class research talent" },
+                sectors: { finance: "Very High - 72%", healthcare: "High - 58%", manufacturing: "Medium - 46%", government: "Medium - 38%", retail: "High - 62%" },
+                trust: { publicTrust: "Medium - 51%", healthcareAcceptance: "Medium - 54%", financeAcceptance: "High - 66%", policingAcceptance: "Low - 32%", debate: "Active policy discussion" },
+                innovation: { rank: "8th globally", researchOutput: "14,500+ papers", startups: "1,450+ startups", patents: "11,200+ patents", score: "82/100" },
+                infrastructure: { cloudAdoption: "Very High - 88%", dataCenters: "380+ facilities", internetReadiness: "Excellent", gpuAccess: "High", rating: "Excellent" },
+                maturity: { experimental: "28%", operational: "44%", missionCritical: "20%", regulatedAudited: "8%", level: "Mature" }
+            },
+            "Morocco": {
+                adoption: { companyUsage: "28%", enterpriseAdoption: "42%", smeAdoption: "15%", trend: "Rapidly Growing", trendIcon: "↑↑", lastUpdate: "2025", maturityLevel: "Low-Medium" },
+                readiness: { nationalStrategy: "Yes - AI Made in Morocco", publicSectorUsage: "Low-Medium", dedicatedAuthority: "Directorate-General for AI", fundingPrograms: "Digital Development Fund", commitment: "High" },
+                investment: { governmentBudget: "$420M committed", vcInvestment: "$180M (2025)", publicPrivateInitiatives: "Growing", incentives: "Tech zone benefits", marketStatus: "Early Stage Growth" },
+                talent: { workforceSkills: "Low-Medium - 12% skilled", educationPrograms: "85+ AI programs", universityCenters: "18+ centers", talentAvailability: "Low-Medium", details: "Building foundations" },
+                sectors: { finance: "Medium - 38%", healthcare: "Low - 18%", manufacturing: "Low - 22%", government: "Low-Medium - 28%", retail: "Medium - 32%" },
+                trust: { publicTrust: "Medium - 58%", healthcareAcceptance: "Medium - 52%", financeAcceptance: "Medium - 62%", policingAcceptance: "Medium - 48%", debate: "Emerging discussion" },
+                innovation: { rank: "72nd globally", researchOutput: "1,200+ papers", startups: "180+ startups", patents: "420+ patents", score: "42/100" },
+                infrastructure: { cloudAdoption: "Medium - 54%", dataCenters: "12+ facilities", internetReadiness: "Good", gpuAccess: "Low", rating: "Developing" },
+                maturity: { experimental: "58%", operational: "28%", missionCritical: "8%", regulatedAudited: "6%", level: "Early Stage" }
+            }
+        };
+
         const countryMapping = {
             "United States of America": "United States",
             "United Kingdom": "United Kingdom",
             "People's Republic of China": "China",
-            "Republic of Korea": "South Korea",
-            "Viet Nam": "Vietnam",
-            "Vietnam": "Vietnam",
-            "Saudi Arabia": "Saudi Arabia",
             "United Arab Emirates": "United Arab Emirates",
-            "Israel": "Israel",
-            "Egypt": "Egypt",
-            "Morocco": "Morocco",
-            "Turkey": "Turkey"
+            "Saudi Arabia": "Saudi Arabia",
+            "Republic of Korea": "South Korea",
+            "Viet Nam": "Vietnam"
         };
 
-        // Function to check if country has regulation or framework
         function hasRegulation(countryName) {
-            // Check direct match
             if (aiRegulations[countryName]) return countryName;
-            
-            // Check mapping
-            if (countryMapping[countryName]) {
-                return countryMapping[countryName];
-            }
-            
-            // Check if part of EU
+            if (countryMapping[countryName]) return countryMapping[countryName];
             for (const [key, value] of Object.entries(aiRegulations)) {
                 if (value.countries && value.countries.includes(countryName)) {
                     return key;
                 }
             }
-            
             return null;
         }
 
-        // Function to generate regulation/framework content
-        function generateRegulationContent(regulationKey) {
-            const reg = aiRegulations[regulationKey];
-            if (!reg) return null;
+        function showSelectionModal(countryName) {
+            currentCountryKey = hasRegulation(countryName) || countryName;
+            document.getElementById('selectionCountryName').textContent = countryName;
+            document.getElementById('selectionModal').style.display = 'block';
+        }
+
+        function closeSelectionModal() {
+            document.getElementById('selectionModal').style.display = 'none';
+        }
+
+        function closeContentModal() {
+            document.getElementById('contentModal').style.display = 'none';
+        }
+
+        function backToSelection() {
+            closeContentModal();
+            showSelectionModal(currentCountryKey);
+        }
+
+        function showContent(type) {
+            currentContentType = type;
+            closeSelectionModal();
+            
+            const contentModal = document.getElementById('contentModal');
+            const title = document.getElementById('contentModalTitle');
+            const body = document.getElementById('contentModalBody');
+            
+            let content = generateContent(type, currentCountryKey);
+            
+            title.textContent = `${currentCountryKey} - ${getContentTitle(type)}`;
+            body.innerHTML = content.html;
+            currentContent = content.text;
+            
+            const downloadBtn = document.getElementById('downloadBtn');
+            downloadBtn.style.display = 'inline-block'; // Always show download button
+            
+            contentModal.style.display = 'block';
+        }
+
+        function getContentTitle(type) {
+            const titles = {
+                regulations: 'AI Regulations & Frameworks',
+                adoption: 'AI Adoption Level',
+                readiness: 'Government AI Readiness',
+                investment: 'AI Investment & Funding',
+                talent: 'Workforce AI Skills & Talent',
+                sectors: 'AI Usage by Sector',
+                trust: 'Public Trust & Social Acceptance',
+                innovation: 'AI Innovation Index',
+                infrastructure: 'AI Infrastructure Readiness',
+                maturity: 'AI Use-Case Maturity'
+            };
+            return titles[type] || 'Information';
+        }
+
+        function generateContent(type, country) {
+            if (type === 'regulations') {
+                return generateRegulationContent(country);
+            }
+            
+            const metrics = aiMetrics[country];
+            
+            if (!metrics || !metrics[type]) {
+                return {
+                    html: `<div class="metric-section">
+                        <p><strong>Data not available for ${country}</strong></p>
+                        <p>We're continuously expanding our database. This information will be added soon.</p>
+                    </div>`,
+                    text: `Data not available for ${country} - ${getContentTitle(type)}`
+                };
+            }
+            
+            const data = metrics[type];
+            let html = '';
+            let text = `${country} - ${getContentTitle(type)}\n${'='.repeat(80)}\n\n`;
+            
+            switch(type) {
+                case 'adoption':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">AI Adoption Overview</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">Company Usage</div>
+                                    <div class="metric-value">${data.companyUsage}</div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${data.companyUsage}"></div></div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Enterprise Adoption</div>
+                                    <div class="metric-value">${data.enterpriseAdoption}</div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${data.enterpriseAdoption}"></div></div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">SME Adoption</div>
+                                    <div class="metric-value">${data.smeAdoption}</div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${data.smeAdoption}"></div></div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Adoption Trend</div>
+                                    <div class="metric-value">${data.trendIcon} ${data.trend}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Market Maturity</div>
+                                    <div class="metric-value"><span class="badge badge-high">${data.maturityLevel}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Company Usage: ${data.companyUsage}\nEnterprise: ${data.enterpriseAdoption}\nSME: ${data.smeAdoption}\nTrend: ${data.trend}\n`;
+                    break;
+                    
+                case 'readiness':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">Government AI Readiness</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">National AI Strategy</div>
+                                    <div class="metric-value">${data.nationalStrategy}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Public Sector Usage</div>
+                                    <div class="metric-value"><span class="badge badge-high">${data.publicSectorUsage}</span></div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Dedicated Authority</div>
+                                    <div class="metric-value">${data.dedicatedAuthority}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Funding Programs</div>
+                                    <div class="metric-value">${data.fundingPrograms}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Strategy: ${data.nationalStrategy}\nAuthority: ${data.dedicatedAuthority}\n`;
+                    break;
+                    
+                case 'investment':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">AI Investment & Funding</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">Government Budget</div>
+                                    <div class="metric-value">${data.governmentBudget}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">VC Investment</div>
+                                    <div class="metric-value">${data.vcInvestment}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Market Status</div>
+                                    <div class="metric-value"><span class="badge badge-high">${data.marketStatus}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Budget: ${data.governmentBudget}\nVC: ${data.vcInvestment}\nStatus: ${data.marketStatus}\n`;
+                    break;
+                    
+                case 'talent':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">Workforce AI Skills</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">Workforce Skills</div>
+                                    <div class="metric-value">${data.workforceSkills}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Education Programs</div>
+                                    <div class="metric-value">${data.educationPrograms}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Talent Availability</div>
+                                    <div class="metric-value"><span class="badge badge-high">${data.talentAvailability}</span></div>
+                                </div>
+                            </div>
+                            <p style="margin-top: 15px;">${data.details}</p>
+                        </div>
+                    `;
+                    text += `Skills: ${data.workforceSkills}\nPrograms: ${data.educationPrograms}\nDetails: ${data.details}\n`;
+                    break;
+                    
+                case 'sectors':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">AI Adoption by Sector</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">🏦 Finance</div>
+                                    <div class="metric-value">${data.finance}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">🏥 Healthcare</div>
+                                    <div class="metric-value">${data.healthcare}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">🏭 Manufacturing</div>
+                                    <div class="metric-value">${data.manufacturing}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">🏛️ Government</div>
+                                    <div class="metric-value">${data.government}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">🛍️ Retail</div>
+                                    <div class="metric-value">${data.retail}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Finance: ${data.finance}\nHealthcare: ${data.healthcare}\nManufacturing: ${data.manufacturing}\n`;
+                    break;
+                    
+                case 'trust':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">Public Trust & Acceptance</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">Overall Trust</div>
+                                    <div class="metric-value">${data.publicTrust}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Healthcare AI</div>
+                                    <div class="metric-value">${data.healthcareAcceptance}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Finance AI</div>
+                                    <div class="metric-value">${data.financeAcceptance}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Policing AI</div>
+                                    <div class="metric-value">${data.policingAcceptance}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Trust: ${data.publicTrust}\nHealthcare: ${data.healthcareAcceptance}\nFinance: ${data.financeAcceptance}\n`;
+                    break;
+                    
+                case 'innovation':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">AI Innovation Index</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">Global Rank</div>
+                                    <div class="metric-value">${data.rank}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Research Output</div>
+                                    <div class="metric-value">${data.researchOutput}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">AI Startups</div>
+                                    <div class="metric-value">${data.startups}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Innovation Score</div>
+                                    <div class="metric-value"><span class="badge badge-high">${data.score}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Rank: ${data.rank}\nScore: ${data.score}\nStartups: ${data.startups}\n`;
+                    break;
+                    
+                case 'infrastructure':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">AI Infrastructure</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">Cloud Adoption</div>
+                                    <div class="metric-value">${data.cloudAdoption}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Data Centers</div>
+                                    <div class="metric-value">${data.dataCenters}</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Overall Rating</div>
+                                    <div class="metric-value"><span class="badge badge-high">${data.rating}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Cloud: ${data.cloudAdoption}\nRating: ${data.rating}\n`;
+                    break;
+                    
+                case 'maturity':
+                    html = `
+                        <div class="metric-section">
+                            <div class="metric-title">Use-Case Maturity</div>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">🧪 Experimental</div>
+                                    <div class="metric-value">${data.experimental}</div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${data.experimental}"></div></div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">⚙️ Operational</div>
+                                    <div class="metric-value">${data.operational}</div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${data.operational}"></div></div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">🎯 Mission-Critical</div>
+                                    <div class="metric-value">${data.missionCritical}</div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${data.missionCritical}"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    text += `Experimental: ${data.experimental}\nOperational: ${data.operational}\nMission-Critical: ${data.missionCritical}\n`;
+                    break;
+            }
+            
+            return { html, text };
+        }
+
+        function generateRegulationContent(country) {
+            const reg = aiRegulations[country];
+            if (!reg) {
+                return {
+                    html: `<div class="metric-section"><p>No regulation data available for ${country}</p></div>`,
+                    text: `No regulation data available for ${country}`
+                };
+            }
             
             const docType = reg.type === 'law' ? 'REGULATION' : 'FRAMEWORK/GUIDELINE';
             
-            return `AI ${docType} INFORMATION
+            const textContent = `AI ${docType} INFORMATION
 ${'='.repeat(80)}
 
-Country/Region: ${regulationKey}
+Country/Region: ${country}
 Name: ${reg.name}
 Year: ${reg.year}
 Type: ${reg.type === 'law' ? 'Enacted Law/Regulation' : 'Framework/Guidelines/Strategy'}
@@ -789,80 +1313,48 @@ ${reg.keyPoints.map((point, i) => `${i + 1}. ${point}`).join('\n')}
 ${'-'.repeat(80)}
 Document generated: ${new Date().toLocaleString()}
 Data current as of: February 2026
-Source: Global AI Regulations & Frameworks Map
-
-Note: This is a summary document based on publicly available information as of 
-February 2026. For official legal text and complete details, please consult 
-official government sources and legal counsel.
-
-DISCLAIMER: AI regulations and frameworks are rapidly evolving. This information 
-reflects the status as of February 2026 and may change. Always verify current 
-requirements with official sources.
 
 ${reg.type === 'framework' ? `
 FRAMEWORK NOTE: This country has adopted a strategic framework, guidelines, or 
-voluntary principles approach rather than binding legislation. Organizations should 
-monitor for transition to mandatory requirements and follow sector-specific rules.
+voluntary principles approach rather than binding legislation.
 ` : ''}`;
+
+            const html = `
+                <div class="regulation-content">${textContent}</div>
+            `;
+            
+            return { html, text: textContent };
         }
 
-        // Function to show modal with regulation
-        function showRegulationModal(regulationKey) {
-            const reg = aiRegulations[regulationKey];
-            if (!reg) return;
+        function downloadContent() {
+            if (!currentContent) return;
             
-            currentRegulationKey = regulationKey;
-            currentRegulationContent = generateRegulationContent(regulationKey);
-            
-            const modal = document.getElementById('regulationModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalContent = document.getElementById('modalContent');
-            
-            const typeLabel = reg.type === 'law' ? '📋 Law/Regulation' : '📘 Framework/Guidelines';
-            modalTitle.textContent = `${regulationKey} - ${typeLabel}`;
-            modalContent.textContent = currentRegulationContent;
-            
-            modal.style.display = 'block';
-        }
-
-        // Function to close modal
-        function closeModal() {
-            document.getElementById('regulationModal').style.display = 'none';
-        }
-
-        // Function to download from modal
-        function downloadCurrentRegulation() {
-            if (!currentRegulationKey || !currentRegulationContent) return;
-            
-            const reg = aiRegulations[currentRegulationKey];
-            const blob = new Blob([currentRegulationContent], { type: 'text/plain' });
+            const blob = new Blob([currentContent], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            const typeLabel = reg.type === 'law' ? 'Regulation' : 'Framework';
-            a.download = `AI_${typeLabel}_${currentRegulationKey.replace(/\s+/g, '_')}_Feb2026.txt`;
-            
-            // For mobile compatibility
+            a.download = `${currentCountryKey}_${currentContentType}_Feb2026.txt`;
             a.style.display = 'none';
             document.body.appendChild(a);
             a.click();
-            
-            // Cleanup
             setTimeout(() => {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
             }, 100);
         }
 
-        // Close modal when clicking outside
         window.onclick = function(event) {
-            const modal = document.getElementById('regulationModal');
-            if (event.target == modal) {
-                closeModal();
+            const selectionModal = document.getElementById('selectionModal');
+            const contentModal = document.getElementById('contentModal');
+            if (event.target == selectionModal) {
+                closeSelectionModal();
+            }
+            if (event.target == contentModal) {
+                closeContentModal();
             }
         }
 
-        // Set up SVG
+        // Map rendering
         const width = 1340;
         const height = 600;
         
@@ -879,7 +1371,6 @@ monitor for transition to mandatory requirements and follow sector-specific rule
         
         const tooltip = d3.select(".tooltip");
 
-        // Load and draw map
         d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
             .then(data => {
                 const countries = topojson.feature(data, data.objects.countries);
@@ -898,19 +1389,15 @@ monitor for transition to mandatory requirements and follow sector-specific rule
                     .on("mouseover", function(event, d) {
                         const regulationKey = hasRegulation(d.properties.name);
                         if (regulationKey) {
-                            const reg = aiRegulations[regulationKey];
-                            const typeLabel = reg.type === 'law' ? '📋 Law/Regulation' : '📘 Framework/Guidelines';
                             tooltip
                                 .style("opacity", 1)
                                 .html(`<strong>${d.properties.name}</strong><br/>
-                                       ${typeLabel}<br/>
-                                       ${reg.name}<br/>
-                                       <em>Status: ${reg.status}</em><br/>
-                                       <small>Click to view & download details</small>`);
+                                       <small>Click for comprehensive AI data</small>`);
                         } else {
                             tooltip
                                 .style("opacity", 1)
-                                .html(`<strong>${d.properties.name}</strong><br/>No major AI governance framework`);
+                                .html(`<strong>${d.properties.name}</strong><br/>
+                                       <small>Click to explore</small>`);
                         }
                     })
                     .on("mousemove", function(event) {
@@ -922,17 +1409,11 @@ monitor for transition to mandatory requirements and follow sector-specific rule
                         tooltip.style("opacity", 0);
                     })
                     .on("click", function(event, d) {
-                        const regulationKey = hasRegulation(d.properties.name);
-                        if (regulationKey) {
-                            showRegulationModal(regulationKey);
-                        }
+                        showSelectionModal(d.properties.name);
                     });
             })
             .catch(error => {
-                console.error("Error loading map data:", error);
-                d3.select("#map").append("p")
-                    .style("padding", "20px")
-                    .text("Error loading map data. Please refresh the page.");
+                console.error("Error loading map:", error);
             });
     </script>
 </body>
