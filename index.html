@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global AI Regulations & Frameworks Map - February 2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            color: #1a1a1a;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .update-badge {
+            display: inline-block;
+            background: #4285f4;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        
+        #map {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        
+        .country {
+            stroke: #fff;
+            stroke-width: 0.5;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .country.no-regulation {
+            fill: #e0e0e0;
+        }
+        
+        .country.has-law {
+            fill: #1e88e5;
+        }
+        
+        .country.has-framework {
+            fill: #66bb6a;
+        }
+        
+        .country:hover {
+            opacity: 0.7;
+            stroke-width: 1.5;
+        }
+        
+        .tooltip {
+            position: absolute;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            border-radius: 6px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+            max-width: 320px;
+            z-index: 1000;
+            line-height: 1.4;
+        }
+        
+        .legend {
+            margin-top: 20px;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-left: 4px solid #4285f4;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .stats-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff8e1;
+            border-left: 4px solid #ffa726;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            Global AI Regulations & Frameworks Map
+            <span class="update-badge">Updated Feb 2026</span>
+        </h1>
+        <p class="subtitle">Click on any highlighted country to download AI regulation or framework information • Data current as of February 2026</p>
+        
+        <div id="map"></div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #1e88e5;"></div>
+                <span>Enacted Law or Regulation</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #66bb6a;"></div>
+                <span>Framework, Guidelines or Strategy</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e0e0e0;"></div>
+                <span>No Major AI Governance</span>
+            </div>
+        </div>
+        
+        <div class="stats-box">
+            <strong>📊 Global Coverage:</strong> This map includes 72+ countries with AI policies, including comprehensive laws (blue) and strategic frameworks/guidelines (green). Countries shown include major regulations in EU, USA, China, and frameworks across Middle East, North Africa, and Asia-Pacific.
+        </div>
+        
+        <div class="info-box">
+            <strong>🔄 Key Updates (2025-2026):</strong><br>
+            <strong>Laws:</strong> EU AI Act (fully enforceable Aug 2026) • Vietnam AI Law (effective Mar 2026) • Japan AI Promotion Act (Sept 2025) • South Korea Framework AI Act (Jan 2026) • Bahrain AI Regulation Law (2024)<br>
+            <strong>Frameworks:</strong> Saudi Arabia Draft Global AI Hub Law (2025) • UAE National AI Strategy 2031 • Morocco Digital X.0 Framework (2025-2026) • Israel Responsible Innovation Policy (2023-2025) • Qatar, Oman, Kuwait National AI Strategies
+        </div>
+    </div>
+    
+    <div class="tooltip"></div>
+
+    <script>
+        // Comprehensive AI Regulations & Frameworks Database - February 2026
+        const aiRegulations = {
+            "European Union": {
+                name: "EU AI Act",
+                year: "2024 (Enforceable 2026)",
+                type: "law",
+                status: "In Force - Phased Implementation",
+                description: "The world's first comprehensive AI regulation. The EU AI Act became law in August 2024 with phased enforcement. Prohibited AI practices banned since February 2025, GPAI obligations since August 2025, and high-risk system requirements become fully enforceable August 2, 2026.",
+                keyPoints: [
+                    "Risk-based approach: Unacceptable, High, Limited, and Minimal risk categories",
+                    "Prohibited AI uses: Social scoring, real-time biometric surveillance (with exceptions)",
+                    "High-risk AI systems: Strict requirements for conformity assessment, data governance, transparency",
+                    "GPAI (General Purpose AI) obligations: Technical documentation, copyright compliance",
+                    "Transparency requirements: AI-generated content labeling (Code of Practice Dec 2025)",
+                    "Fines: Up to €35 million or 7% of global turnover for prohibited practices",
+                    "Full enforcement for high-risk systems: August 2, 2026",
+                    "Product-embedded AI systems: Extended deadline August 2, 2027"
+                ],
+                countries: ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", 
+                           "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", 
+                           "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", 
+                           "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"]
+            },
+            "United States": {
+                name: "Federal Executive Order & State Regulations",
+                year: "2023-2026",
+                type: "law",
+                status: "Multi-level Framework",
+                description: "Federal executive order on AI safety (2023) combined with pioneering state-level regulations. Colorado became first state with comprehensive AI law. California enacted multiple AI transparency laws effective January 2026.",
+                keyPoints: [
+                    "Federal: Executive Order on Safe, Secure, and Trustworthy AI (Oct 2023)",
+                    "Colorado AI Act (SB 24-205): Prevents algorithmic discrimination - Effective Feb 1, 2026",
+                    "California AB 2013: Generative AI training data disclosure - Effective Jan 1, 2026",
+                    "California SB 942: AI Transparency Act for AI-generated content - Effective Jan 1, 2026",
+                    "California companion chatbot safety law for minors - Effective Jan 1, 2026",
+                    "State-level variations: Multiple states considering similar frameworks",
+                    "Focus areas: Algorithmic bias, transparency, consumer protection",
+                    "No comprehensive federal AI legislation yet"
+                ]
+            },
+            "United Kingdom": {
+                name: "Pro-Innovation AI Framework",
+                year: "2023-2026",
+                type: "framework",
+                status: "Principles-Based Approach",
+                description: "The UK adopted a sector-specific, pro-innovation approach rather than comprehensive legislation. The AI (Regulation) Bill was reintroduced in early 2026 but remains under deliberation.",
+                keyPoints: [
+                    "Five cross-sectoral principles: Safety, transparency, fairness, accountability, contestability",
+                    "Sector-specific regulatory approach (no omnibus law)",
+                    "Existing regulators oversee AI in respective domains",
+                    "AI (Regulation) Bill reintroduced 2026 - progressing through Parliament",
+                    "Framework Convention on AI signed Sept 2024 (Council of Europe)",
+                    "Focus on maintaining innovation while ensuring ethical AI"
+                ]
+            },
+            "China": {
+                name: "Comprehensive AI Governance Framework",
+                year: "2023-2026",
+                type: "law",
+                status: "Fully Implemented",
+                description: "China has implemented comprehensive AI regulations including generative AI measures, algorithm recommendations, and deep synthesis rules requiring AI systems to comply with socialist core values and national security interests.",
+                keyPoints: [
+                    "Generative AI Services Management Measures (July 2023, updated)",
+                    "Algorithm Recommendation Regulations (in force)",
+                    "Deep Synthesis Regulations (deepfakes and synthetic media)",
+                    "Requirements: Socialist core values compliance, content security",
+                    "Data sovereignty: AI data must remain within China's borders",
+                    "State monitoring and approval for critical infrastructure AI",
+                    "Algorithmic transparency and user opt-out requirements",
+                    "Comprehensive oversight and state control mechanisms"
+                ]
+            },
+            "Canada": {
+                name: "Artificial Intelligence and Data Act (AIDA)",
+                year: "2024",
+                type: "law",
+                status: "Enacted - Awaiting Implementation",
+                description: "Part of Bill C-27, AIDA establishes a risk-based regulatory framework for AI systems. The law was passed in 2024 and focuses on high-impact AI systems.",
+                keyPoints: [
+                    "Part of Bill C-27 (Digital Charter Implementation Act)",
+                    "Risk-based framework for high-impact AI systems",
+                    "Requirements for transparency and accountability",
+                    "Mandatory impact assessments for high-risk AI",
+                    "Minister of Innovation oversight authority",
+                    "Penalties for non-compliance",
+                    "Harmonization with privacy legislation (PIPEDA)",
+                    "Implementation regulations being developed"
+                ]
+            },
+            "Brazil": {
+                name: "Brazilian AI Act",
+                year: "2024-2026",
+                type: "law",
+                status: "Legislative Review",
+                description: "Brazil's AI Bill (Bill 2338/2023) was approved by the Senate in December 2024 and is under final legislative review. Core measures are projected to take effect in 2026.",
+                keyPoints: [
+                    "Risk-based approach: High-risk systems face stricter regulations",
+                    "Protection of fundamental rights and public safety",
+                    "Transparency and explainability requirements",
+                    "Alignment with LGPD (Brazil's GDPR)",
+                    "Establishment of regulatory authority for oversight",
+                    "Impact assessments for high-risk AI systems",
+                    "Fines based on revenue (similar to EU model)",
+                    "Expected to take effect in 2026"
+                ]
+            },
+            "Singapore": {
+                name: "Model AI Governance Framework",
+                year: "2020-2024 (Updated)",
+                type: "framework",
+                status: "Voluntary Framework",
+                description: "Singapore continues with its voluntary, principles-based Model AI Governance Framework, regularly updated to reflect best practices and international standards.",
+                keyPoints: [
+                    "Voluntary framework with practical implementation guidance",
+                    "Risk-based governance approach",
+                    "Focus on transparency and explainability",
+                    "Internal governance structures for AI deployment",
+                    "Human oversight requirements for high-risk decisions",
+                    "Regular updates to framework (latest 2024)",
+                    "Industry-specific guidance documents",
+                    "Emphasis on innovation and competitiveness"
+                ]
+            },
+            "Japan": {
+                name: "AI Promotion Act",
+                year: "2025",
+                type: "law",
+                status: "In Force (September 1, 2025)",
+                description: "Japan's first AI-specific legislation, the Act on Promotion of Research and Development and Utilization of AI-Related Technologies, was enacted May 28, 2025 and took effect September 1, 2025. Innovation-first approach with soft-law mechanisms.",
+                keyPoints: [
+                    "First comprehensive AI legislation in Japan - enacted May 2025",
+                    "In force since September 1, 2025",
+                    "Innovation-first, promotion-focused framework",
+                    "Establishes AI Strategy Headquarters under Cabinet",
+                    "No direct penalties - relies on guidance and cooperation",
+                    "Transparency obligations for AI developers and users",
+                    "'Name and shame' approach for violations",
+                    "Fundamental AI Plan to be implemented",
+                    "Complements AI Guidelines for Business",
+                    "Focus: Make Japan 'most AI-friendly country'"
+                ]
+            },
+            "South Korea": {
+                name: "Framework Act on AI",
+                year: "2025-2026",
+                type: "law",
+                status: "In Force (January 22, 2026)",
+                description: "South Korea's Basic Act on Artificial Intelligence was enacted in January 2025 and takes effect January 22, 2026. Establishes safety, transparency, and fairness requirements for AI systems.",
+                keyPoints: [
+                    "Enacted January 2025, effective January 22, 2026",
+                    "Emphasis on safety, transparency, and fairness",
+                    "Requirements for high-impact and generative AI systems",
+                    "Establishes National AI Control Tower for coordination",
+                    "AI Safety Institute creation",
+                    "Support for R&D, data infrastructure, and talent development",
+                    "Government-supported research and development focus",
+                    "Risk-based regulatory measures for emerging risks"
+                ]
+            },
+            "Australia": {
+                name: "AI Ethics Framework & Emerging Regulation",
+                year: "2024-2026",
+                type: "framework",
+                status: "Voluntary Framework + Developing Mandatory Rules",
+                description: "Australia maintains a voluntary AI Ethics Framework while developing mandatory requirements for high-risk AI applications.",
+                keyPoints: [
+                    "Eight AI Ethics Principles (voluntary framework)",
+                    "Mandatory requirements under consideration for high-risk AI",
+                    "Risk-based approach being developed",
+                    "Transparency obligations under discussion",
+                    "Sector-specific regulations emerging",
+                    "Privacy Act reforms include AI considerations",
+                    "Government consulting on mandatory guardrails",
+                    "Focus on responsible AI deployment"
+                ]
+            },
+            "India": {
+                name: "Digital India AI Strategy & Emerging Framework",
+                year: "2023-2026",
+                type: "framework",
+                status: "Strategy Phase - Regulations Developing",
+                description: "India is developing its AI regulatory framework through the Digital India AI Strategy with emerging sectoral regulations and public consultation processes.",
+                keyPoints: [
+                    "National AI framework under development",
+                    "Digital India AI Strategy guiding development",
+                    "Focus on ethical AI principles and responsible deployment",
+                    "Data protection integration (Digital Personal Data Protection Act)",
+                    "Sectoral regulations emerging (finance, healthcare, etc.)",
+                    "Public consultation processes ongoing",
+                    "Emphasis on AI for development and innovation",
+                    "Advisory bodies established for AI governance"
+                ]
+            },
+            "Vietnam": {
+                name: "Law on Artificial Intelligence",
+                year: "2025-2026",
+                type: "law",
+                status: "Enacted - Effective March 1, 2026",
+                description: "Vietnam's National Assembly passed the country's first comprehensive AI Law on December 10, 2025. Takes effect March 1, 2026 and establishes a risk-based framework inspired by the EU AI Act.",
+                keyPoints: [
+                    "Passed December 10, 2025 - Effective March 1, 2026",
+                    "First comprehensive standalone AI law in Vietnam",
+                    "Risk-based classification: High-risk, Medium-risk, Low-risk",
+                    "High-risk systems: Healthcare, education, finance require strict compliance",
+                    "Transparency requirements: AI-generated content must be labeled",
+                    "National AI Commission to be established by July 1, 2026",
+                    "National AI Development Fund and AI Voucher program for startups",
+                    "Regulatory sandbox for testing AI innovations",
+                    "Transition periods: 12-18 months for existing systems to comply",
+                    "Centralized oversight by Ministry of Science and Technology",
+                    "Fines based on revenue (EU-inspired penalty structure)"
+                ]
+            },
+            "Saudi Arabia": {
+                name: "AI Ethics Framework & Draft Global AI Hub Law",
+                year: "2023-2025",
+                type: "framework",
+                status: "Strategic Framework + Draft Legislation",
+                description: "Saudi Arabia has developed comprehensive AI ethics principles and frameworks under SDAIA (Saudi Data and AI Authority). The Draft Global AI Hub Law (2025) proposes revolutionary framework for international data hosting with 'Virtual Hubs' concept.",
+                keyPoints: [
+                    "Principles and Controls of AI Ethics (September 2023)",
+                    "Generative AI Guidelines for Government and Public (2024)",
+                    "AI Adoption Framework for organizations",
+                    "Deepfakes Guidelines (2024) - mandatory disclosure and watermarking",
+                    "Draft Global AI Hub Law (2025) - data embassy concept",
+                    "Personal Data Protection Law (PDPL) as foundation",
+                    "Vision 2030: AI as key to economic diversification",
+                    "SDAIA oversight and monitoring",
+                    "National Strategy for Data & AI (2020)",
+                    "Public-private partnerships and regulatory sandboxes",
+                    "Transition toward 'hard law' for AI infrastructure"
+                ]
+            },
+            "United Arab Emirates": {
+                name: "UAE National AI Strategy 2031",
+                year: "2017-2026",
+                type: "framework",
+                status: "Strategic Framework with Sectoral Rules",
+                description: "The UAE has developed a comprehensive strategic framework through its National AI Strategy 2031, with sector-specific regulations and ethical guidelines. World's first AI-enabled Regulatory Intelligence Office established April 2025.",
+                keyPoints: [
+                    "National AI Strategy 2031 - launched 2017, updated regularly",
+                    "AI Ethics Principles and Guidelines",
+                    "Minister of State for AI, Digital Economy (appointed 2017)",
+                    "Personal Data Protection Law (PDPL) foundation - 2021",
+                    "Child Digital Safety Law - Federal Decree-Law No. 26 of 2025",
+                    "World's first AI-enabled Regulatory Intelligence Office (April 2025)",
+                    "National AI System joining Cabinet as advisory member (Jan 2026)",
+                    "DIFC and ADGM data protection amendments for AI",
+                    "Dubai Autonomous Vehicles Regulation (Law No. 9 of 2023)",
+                    "Sector-specific guidelines (finance, healthcare, transport)",
+                    "UAE Position on AI Policy - international cooperation focus"
+                ]
+            },
+            "Qatar": {
+                name: "National AI Strategy",
+                year: "2019-2026",
+                type: "framework",
+                status: "Strategic Framework with Sectoral Implementation",
+                description: "Qatar's National AI Strategy aligns with Vision 2030, built around six key pillars. AI Committee established 2021 to coordinate implementation. Sectoral regulations in finance and capital markets.",
+                keyPoints: [
+                    "National AI Strategy (2019) - six pillars: health, entertainment, business, education, research, ethics",
+                    "Artificial Intelligence Committee (Cabinet Decision No. 10 of 2021)",
+                    "Qatar Central Bank AI Guidelines for financial institutions (Sept 2024)",
+                    "QFMA draft regulations for AI in capital markets (May 2025)",
+                    "National Cyber Security Agency (NCSA) AI security guidelines (2024)",
+                    "Personal Data Protection Law No. 13 of 2016",
+                    "Phased implementation: Foundation (2024-25), Sectoral (2025-26), Full Deployment (2026-27)",
+                    "World Economic Forum AI procurement pilot country"
+                ]
+            },
+            "Bahrain": {
+                name: "AI Regulation Law",
+                year: "2024",
+                type: "law",
+                status: "Enacted",
+                description: "Bahrain enacted the GCC region's first comprehensive standalone AI Regulation Law in April 2024. The law comprises 38 articles across seven chapters and regulates AI development and deployment.",
+                keyPoints: [
+                    "Standalone AI Regulation Law - approved April 28, 2024",
+                    "First comprehensive AI law in GCC region",
+                    "38 articles across seven chapters",
+                    "Duties and prohibitions for AI in healthcare, radiology, education",
+                    "Principles for Ethical Use of AI",
+                    "GCC AI Ethics Guideline Initiative (2024)",
+                    "World Economic Forum AI Procurement pilot country (2019)",
+                    "Personal Data Protection Law No. 30 of 2018",
+                    "Digital Government Strategy 2022 integration",
+                    "Economic Vision 2030 alignment"
+                ]
+            },
+            "Kuwait": {
+                name: "National AI Strategy",
+                year: "2025-2028",
+                type: "framework",
+                status: "Draft Strategy - Implementation Phase",
+                description: "Kuwait launched draft National AI Strategy (2025-2028) aligned with Vision 2035 for knowledge-based economy transformation. Bill proposed for Public Authority for AI establishment.",
+                keyPoints: [
+                    "Draft Kuwait National AI Strategy (2025-2028)",
+                    "Kuwait Vision 2035 alignment",
+                    "Focus: AI Centres of Excellence, local LLMs, Arabic AI capabilities",
+                    "Strategic partnership with Microsoft for national AI data centre",
+                    "Bill for establishment of Public Authority for AI",
+                    "Data Privacy Protection Regulation (CITRA)",
+                    "Human-centered approach to AI deployment",
+                    "Priority sectors: government, healthcare, energy, education, infrastructure",
+                    "Goal: Regional AI hub by 2028"
+                ]
+            },
+            "Oman": {
+                name: "National Program for AI and Advanced Digital Technologies",
+                year: "2024-2026",
+                type: "framework",
+                status: "Approved - Implementation Starting",
+                description: "Oman's Council of Ministers approved the National Program of AI on September 19, 2024, aligned with Vision 2040. Draft National AI Policy opened for public consultation August 2024.",
+                keyPoints: [
+                    "National Program of AI and Advanced Digital Technologies (Sept 2024)",
+                    "Vision 2040 alignment",
+                    "Three pillars: promoting AI adoption, localizing AI technologies, governing AI with human-centered approach",
+                    "Draft National AI Policy (public consultation Aug 2024)",
+                    "Draft National Charter for AI Ethics",
+                    "Oman GPT development - culturally relevant language model",
+                    "Future Vision 2020 - first GCC long-term strategy (1995)",
+                    "Digital economy national program",
+                    "Governance framework for data management and AI systems"
+                ]
+            },
+            "Israel": {
+                name: "Responsible Innovation Policy & National AI Program",
+                year: "2023-2026",
+                type: "framework",
+                status: "Policy Framework + Sectoral Approach",
+                description: "Israel's AI Policy emphasizes 'Responsible Innovation' with sector-specific regulations. Privacy Protection Authority released draft AI guidance February 2025. National AI Program supports infrastructure and gradual regulatory mechanisms.",
+                keyPoints: [
+                    "Israel's Policy on AI Regulation and Ethics (Dec 2023)",
+                    "Responsible Innovation guiding principle",
+                    "Privacy Protection Authority (PPA) draft AI guidance (Feb 2025)",
+                    "Protection of Privacy Law Amendment 13 (effective Aug 14, 2025)",
+                    "National AI Program (Innovation Authority) - infrastructure and talent",
+                    "Sector-based regulatory model (not comprehensive law)",
+                    "AI Policy Coordination Center (Ministry of Innovation)",
+                    "Risk Management Toolbox for sectoral regulators",
+                    "Framework Law for AI under discussion (Ministry of Justice)",
+                    "Bank of Israel binding directives expected late 2025/early 2026",
+                    "Council of Europe AI Convention signatory (Sept 2024)"
+                ]
+            },
+            "Morocco": {
+                name: "AI Made in Morocco Strategy & Digital X.0 Framework",
+                year: "2025-2030",
+                type: "framework",
+                status: "Roadmap Implementation Phase",
+                description: "Morocco launched 'AI Made in Morocco' on January 12, 2025 with structured 2025-2030 roadmap. Draft Digital Law X.0 and AI Framework planned 2025-2026, with certification process and trust label by 2027.",
+                keyPoints: [
+                    "AI Made in Morocco roadmap (Jan 12, 2025) - 2025-2030",
+                    "Draft Digital Law X.0 and AI Framework (2025-2026)",
+                    "AI certification process and trust label (from 2027)",
+                    "International frameworks alignment (2029-2030)",
+                    "National LLM in Darija and Amazigh languages",
+                    "Draft Bill for National Agency for AI Governance (2024)",
+                    "Personal Data Protection Law 09-08",
+                    "Hub Morocco Digital for Sustainable Development (Sept 2025)",
+                    "Directorate-General for AI establishment",
+                    "Move to Cloud program (2025-2027)",
+                    "World AI Summit planned in Morocco"
+                ]
+            },
+            "Turkey": {
+                name: "National AI Strategy & Draft AI Bill",
+                year: "2021-2025",
+                type: "framework",
+                status: "Strategy + Legislative Process",
+                description: "Turkey published National AI Strategy in 2021 with multiple sector-specific guidelines. AI regulation bill now in legislative process, influenced by EU AI Act risk-based approach.",
+                keyPoints: [
+                    "National AI Strategy 2021-2025",
+                    "AI regulation bill in legislative process",
+                    "Influenced by EU AI Act risk-based approach",
+                    "Sector-specific guidelines for various industries",
+                    "Personal Data Protection Law (KVKK) as foundation",
+                    "Focus on AI development and innovation",
+                    "International standards alignment"
+                ]
+            },
+            "Egypt": {
+                name: "Draft AI Law & Charter for Responsible AI",
+                year: "2024-2025",
+                type: "framework",
+                status: "Draft Legislation Phase",
+                description: "Egypt is preparing Draft Artificial Intelligence Law (2024) aimed at formalizing oversight and defining risk categories. Charter for Responsible AI emphasizes cultural and linguistic specificity.",
+                keyPoints: [
+                    "Draft Artificial Intelligence Law (2024) - in preparation",
+                    "Charter for Responsible AI",
+                    "Focus on Arabic Large Language Models development",
+                    "Personal Data Protection Law (PDPL) as foundation",
+                    "Risk-based categorization approach",
+                    "Cultural and linguistic AI relevance emphasis",
+                    "Digital sovereignty and indigenous AI focus"
+                ]
+            }
+        };
+
+        // Country name mapping for different naming conventions
+        const countryMapping = {
+            "United States of America": "United States",
+            "United Kingdom": "United Kingdom",
+            "People's Republic of China": "China",
+            "Republic of Korea": "South Korea",
+            "Viet Nam": "Vietnam",
+            "Vietnam": "Vietnam",
+            "Saudi Arabia": "Saudi Arabia",
+            "United Arab Emirates": "United Arab Emirates",
+            "Israel": "Israel",
+            "Egypt": "Egypt",
+            "Morocco": "Morocco",
+            "Turkey": "Turkey"
+        };
+
+        // Function to check if country has regulation or framework
+        function hasRegulation(countryName) {
+            // Check direct match
+            if (aiRegulations[countryName]) return countryName;
+            
+            // Check mapping
+            if (countryMapping[countryName]) {
+                return countryMapping[countryName];
+            }
+            
+            // Check if part of EU
+            for (const [key, value] of Object.entries(aiRegulations)) {
+                if (value.countries && value.countries.includes(countryName)) {
+                    return key;
+                }
+            }
+            
+            return null;
+        }
+
+        // Function to generate regulation/framework document
+        function downloadRegulation(regulationKey) {
+            const reg = aiRegulations[regulationKey];
+            if (!reg) return;
+            
+            const docType = reg.type === 'law' ? 'REGULATION' : 'FRAMEWORK/GUIDELINE';
+            
+            let content = `AI ${docType} INFORMATION
+${'='.repeat(80)}
+
+Country/Region: ${regulationKey}
+Name: ${reg.name}
+Year: ${reg.year}
+Type: ${reg.type === 'law' ? 'Enacted Law/Regulation' : 'Framework/Guidelines/Strategy'}
+Status: ${reg.status}
+
+DESCRIPTION
+${'-'.repeat(80)}
+${reg.description}
+
+KEY POINTS
+${'-'.repeat(80)}
+${reg.keyPoints.map((point, i) => `${i + 1}. ${point}`).join('\n')}
+
+${'-'.repeat(80)}
+Document generated: ${new Date().toLocaleString()}
+Data current as of: February 2026
+Source: Global AI Regulations & Frameworks Map
+
+Note: This is a summary document based on publicly available information as of 
+February 2026. For official legal text and complete details, please consult 
+official government sources and legal counsel.
+
+DISCLAIMER: AI regulations and frameworks are rapidly evolving. This information 
+reflects the status as of February 2026 and may change. Always verify current 
+requirements with official sources.
+
+${reg.type === 'framework' ? `
+FRAMEWORK NOTE: This country has adopted a strategic framework, guidelines, or 
+voluntary principles approach rather than binding legislation. Organizations should 
+monitor for transition to mandatory requirements and follow sector-specific rules.
+` : ''}
+`;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const typeLabel = reg.type === 'law' ? 'Regulation' : 'Framework';
+            a.download = `AI_${typeLabel}_${regulationKey.replace(/\s+/g, '_')}_Feb2026.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Set up SVG
+        const width = 1340;
+        const height = 600;
+        
+        const svg = d3.select("#map")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        
+        const projection = d3.geoMercator()
+            .scale(180)
+            .translate([width / 2, height / 1.5]);
+        
+        const path = d3.geoPath().projection(projection);
+        
+        const tooltip = d3.select(".tooltip");
+
+        // Load and draw map
+        d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
+            .then(data => {
+                const countries = topojson.feature(data, data.objects.countries);
+                
+                svg.selectAll(".country")
+                    .data(countries.features)
+                    .enter()
+                    .append("path")
+                    .attr("class", d => {
+                        const regulationKey = hasRegulation(d.properties.name);
+                        if (!regulationKey) return "country no-regulation";
+                        const regType = aiRegulations[regulationKey].type;
+                        return regType === 'law' ? "country has-law" : "country has-framework";
+                    })
+                    .attr("d", path)
+                    .on("mouseover", function(event, d) {
+                        const regulationKey = hasRegulation(d.properties.name);
+                        if (regulationKey) {
+                            const reg = aiRegulations[regulationKey];
+                            const typeLabel = reg.type === 'law' ? '📋 Law/Regulation' : '📘 Framework/Guidelines';
+                            tooltip
+                                .style("opacity", 1)
+                                .html(`<strong>${d.properties.name}</strong><br/>
+                                       ${typeLabel}<br/>
+                                       ${reg.name}<br/>
+                                       <em>Status: ${reg.status}</em><br/>
+                                       <small>Click to download details</small>`);
+                        } else {
+                            tooltip
+                                .style("opacity", 1)
+                                .html(`<strong>${d.properties.name}</strong><br/>No major AI governance framework`);
+                        }
+                    })
+                    .on("mousemove", function(event) {
+                        tooltip
+                            .style("left", (event.pageX + 15) + "px")
+                            .style("top", (event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function() {
+                        tooltip.style("opacity", 0);
+                    })
+                    .on("click", function(event, d) {
+                        const regulationKey = hasRegulation(d.properties.name);
+                        if (regulationKey) {
+                            downloadRegulation(regulationKey);
+                        }
+                    });
+            })
+            .catch(error => {
+                console.error("Error loading map data:", error);
+                d3.select("#map").append("p")
+                    .style("padding", "20px")
+                    .text("Error loading map data. Please refresh the page.");
+            });
+    </script>
+</body>
+</html>
